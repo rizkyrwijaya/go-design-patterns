@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -12,16 +13,14 @@ func main() {
 	testInstance(1)
 
 	// Lets try initializing it once
-	log.Println()
 	log.Println("Initializing Instance")
 	err := singletonpackage.Initialize("instance A")
 	if err != nil {
 		log.Println("failed to initialize instance:", err)
 		return
 	}
-	log.Println()
 	testInstance(2)
-	log.Println()
+
 	// Lets try changing the instance
 	// First we delete the instnace
 	singletonpackage.CloseInstance()
@@ -54,9 +53,7 @@ func testInstance(x ...int) {
 		return
 	}
 
-	log.Println("Instance has been created! Printing Info")
-	i.About()
-	i.AddressInfo()
+	fmt.Printf("Instance has been created! Printing Info: Name: %s, Address: %s\n", i.About(), i.AddressInfo())
 
 	if len(x) != 0 {
 		log.Println(strings.Repeat("=", 8), x[0], strings.Repeat("=", 9))

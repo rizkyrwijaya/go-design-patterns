@@ -2,19 +2,12 @@ package singletonpackage
 
 import (
 	"errors"
+	"fmt"
 	"log"
-	"sync"
 )
 
-// Ensures it is only ran once
-var so *sync.Once
-
-// Inits initializes the sync once
-func init() {
-	so = &sync.Once{}
-}
-
-var ErrInstanceExists = errors.New("instance exists")
+var ErrNotInitialized = errors.New("instance not initialized")
+var ErrInstanceExists = errors.New("instance already initialized")
 
 type instance struct {
 	name string
@@ -22,12 +15,12 @@ type instance struct {
 
 var inst *instance
 
-func (i *instance) About() {
-	log.Println("Hi im instance:", i.name)
+func (i *instance) About() string {
+	return i.name
 }
 
-func (i *instance) AddressInfo() {
-	log.Println("Im in:", &inst)
+func (i *instance) AddressInfo() string {
+	return fmt.Sprintf("%p", i)
 }
 
 func GetInstance() *instance {
@@ -51,13 +44,10 @@ func Initialize(name string) error {
 		log.Println("[ERR] Instance already exist")
 		return ErrInstanceExists
 	}
-	// Wrapped it in sync once incase the function is called parallel
-	// Eventhough in golang concurrency scheduling that shouldn't happen
-	so.Do(func() {
 
-	})
 	inst = &instance{
 		name: name,
 	}
+
 	return nil
 }
